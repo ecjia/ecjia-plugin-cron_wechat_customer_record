@@ -84,7 +84,7 @@ class cron_wechat_customer_record extends CronAbstract
             list($start_time, $end_time) = $recordStorage->getStartTimeAndEndTime();
 
             $wechat = with(new Ecjia\App\Wechat\WechatUUID($uuid))->getWechatInstance();
-            $wechat->rebinding('staff', function($wechat)
+            $wechat->instance('staff', function($wechat)
             {
                 return new Royalcms\Component\WeChat\Staff\Staff($wechat['access_token']);
             });
