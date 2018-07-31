@@ -92,6 +92,11 @@ class cron_wechat_customer_record extends CronAbstract
                 $recordStorage->setNextStartTime($end_time);
             }
 
+            unset($recordStorage);
+            unset($wechat_id);
+            unset($uuid);
+            unset($wechat);
+
             return true;
         });
 
