@@ -77,7 +77,7 @@ Ecjia_PluginManager::extend('cron_wechat_customer_record', function() {
     return new cron_wechat_customer_record();
 });
 
-RC_Plugin::register_activation_hook(__FILE__, array('plugin_cron_ipdel', 'install'));
-RC_Plugin::register_deactivation_hook(__FILE__, array('plugin_cron_ipdel', 'uninstall'));
+RC_Plugin::register_activation_hook(__FILE__, array('plugin_cron_wechat_customer_record', 'install'));
+RC_Plugin::register_deactivation_hook(__FILE__, array('plugin_cron_wechat_customer_record', 'uninstall'));
 
 // end
