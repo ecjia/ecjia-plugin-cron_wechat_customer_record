@@ -65,46 +65,49 @@ class cron_wechat_customer_record extends CronAbstract
         $data = PlatformAccountModel::where('platform', 'wechat')->where('status', 1)->whereIn('type', [1, 2])->get();
 
         $data->map(function ($model, $key) {
-
-            try {
-                $wechat_id = $model->id;
-                $uuid = $model->uuid;
-
-                $recordStorage = new Ecjia\App\Wechat\Synchronizes\CustomerRecordStorage($wechat_id);
-
-                list($start_time, $end_time) = $recordStorage->getStartTimeAndEndTime();
-
-                $wechat = with(new Ecjia\App\Wechat\WechatUUID($uuid))->getWechatInstance();
-
-                $list = $wechat->staff->records($start_time, $end_time, 1, 10000)->toArray();
-
-                $recordStorage->setData(collect($list));
-
-                if ($list['number'] > 0) {
-                    $recordStorage->save();
-                } else {
-                    if ($start_time < SYS_TIME && SYS_TIME < $end_time) {
-                        return true;
-                    }
-
-                    if ($end_time > SYS_TIME) {
-                        $end_time = SYS_TIME;
-                    }
-
-                    $recordStorage->setNextStartTime($end_time);
-                }
-
-                unset($recordStorage);
-                unset($wechat_id);
-                unset($uuid);
-                unset($wechat);
-
-                return true;
-            } catch (\Royalcms\Component\WeChat\Core\Exceptions\HttpException $e) {
-                //error
-            }
+            $this->updateCustomerRecord($model);
         });
 
+    }
+
+    protected function updateCustomerRecord($model) {
+        try {
+            $wechat_id = $model->id;
+            $uuid = $model->uuid;
+
+            $recordStorage = new Ecjia\App\Wechat\Synchronizes\CustomerRecordStorage($wechat_id);
+
+            list($start_time, $end_time) = $recordStorage->getStartTimeAndEndTime();
+
+            $wechat = with(new Ecjia\App\Wechat\WechatUUID($uuid))->getWechatInstance();
+
+            $list = $wechat->staff->records($start_time, $end_time, 1, 10000)->toArray();
+
+            $recordStorage->setData(collect($list));
+
+            if ($list['number'] > 0) {
+                $recordStorage->save();
+            } else {
+                if ($start_time < SYS_TIME && SYS_TIME < $end_time) {
+                    return true;
+                }
+
+                if ($end_time > SYS_TIME) {
+                    $end_time = SYS_TIME;
+                }
+
+                $recordStorage->setNextStartTime($end_time);
+            }
+
+            unset($recordStorage);
+            unset($wechat_id);
+            unset($uuid);
+            unset($wechat);
+
+            return true;
+        } catch (\Royalcms\Component\WeChat\Core\Exceptions\HttpException $e) {
+            //error
+        }
     }
     
 	/**
