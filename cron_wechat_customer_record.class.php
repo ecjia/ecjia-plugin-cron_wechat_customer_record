@@ -64,13 +64,9 @@ class cron_wechat_customer_record extends CronAbstract
 
         $data = PlatformAccountModel::where('platform', 'wechat')->where('status', 1)->whereIn('type', [1, 2])->get();
 
-        foreach ($data as $model) {
+        $data->map(function ($model) {
             $this->updateCustomerRecord($model);
-        }
-
-//        $data->map(function ($model, $key) {
-//            $this->updateCustomerRecord($model);
-//        });
+        });
 
     }
 
@@ -84,11 +80,9 @@ class cron_wechat_customer_record extends CronAbstract
             list($start_time, $end_time) = $recordStorage->getStartTimeAndEndTime();
 
             $wechat = with(new Ecjia\App\Wechat\WechatUUID($uuid))->getWechatInstance();
-            $wechat['staff'] = function($wechat)
-            {
-                return new Royalcms\Component\WeChat\Staff\Staff($wechat['access_token']);
-            };
-            $list = $wechat['staff']->records($start_time, $end_time, 1, 10000)->toArray();
+            $wechat_staff = new Royalcms\Component\WeChat\Staff\Staff($wechat['access_token']);
+
+            $list = $wechat_staff->records($start_time, $end_time, 1, 10000)->toArray();
 
             $recordStorage->setData(collect($list));
 
@@ -105,11 +99,6 @@ class cron_wechat_customer_record extends CronAbstract
 
                 $recordStorage->setNextStartTime($end_time);
             }
-
-            unset($recordStorage);
-            unset($wechat_id);
-            unset($uuid);
-            unset($wechat);
 
             return true;
         } catch (\Royalcms\Component\WeChat\Core\Exceptions\HttpException $e) {
