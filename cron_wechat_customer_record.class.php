@@ -64,9 +64,13 @@ class cron_wechat_customer_record extends CronAbstract
 
         $data = PlatformAccountModel::where('platform', 'wechat')->where('status', 1)->whereIn('type', [1, 2])->get();
 
-        $data->map(function ($model, $key) {
+        foreach ($data as $model) {
             $this->updateCustomerRecord($model);
-        });
+        }
+
+//        $data->map(function ($model, $key) {
+//            $this->updateCustomerRecord($model);
+//        });
 
     }
 
