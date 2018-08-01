@@ -60,9 +60,9 @@ class cron_wechat_customer_record extends CronAbstract
      */
     public function run() {
 
-        //@todo 临时解决，获取所有订阅号和服务号，然后遍历执行
+        //@todo 临时解决，获取所有服务号，然后遍历执行
 
-        $data = PlatformAccountModel::where('platform', 'wechat')->where('status', 1)->whereIn('type', [1, 2])->get();
+        $data = PlatformAccountModel::where('platform', 'wechat')->where('status', 1)->where('type', 2)->get();
 
         $data->map(function ($model) {
             $this->updateCustomerRecord($model);
