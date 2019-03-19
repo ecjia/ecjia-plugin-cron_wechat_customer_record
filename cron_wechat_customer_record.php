@@ -73,6 +73,7 @@ class plugin_cron_wechat_customer_record {
 }
 
 Ecjia_PluginManager::extend('cron_wechat_customer_record', function() {
+    RC_Locale::loadPluginTextdomain('cron_wechat_customer_record');
     require_once RC_Plugin::plugin_dir_path(__FILE__) . 'cron_wechat_customer_record.class.php';
     return new cron_wechat_customer_record();
 });
