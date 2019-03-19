@@ -49,7 +49,7 @@ Plugin Name: 同步微信客服聊天记录
 Plugin URI: http://www.ecjia.com/plugins/ecjia.cron_wechat_customer_record/
 Description: 自动更新微信客服聊天记录，如果聊天记录过多，可设置一天同步多次。
 Author: ECJIA TEAM
-Version: 1.18.0
+Version: 1.30.0
 Author URI: http://www.ecjia.com/
 Plugin App: cron
 */
